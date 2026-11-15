@@ -1,5 +1,5 @@
 # Use a base image with OpenJDK 17
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jre
 
 # Install Maven
 RUN apt-get update && \
@@ -16,7 +16,7 @@ COPY . .
 RUN mvn clean package
 
 # Expose port 8080
-EXPOSE 8080
+EXPOSE 8081
 
 # Command to run the JAR file
 ENTRYPOINT ["java", "-jar", "target/rakeshperala-0.0.1-SNAPSHOT.jar"]
