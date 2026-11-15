@@ -10,7 +10,7 @@ RUN apt-get update && \
 WORKDIR /app
 
 # Copy the entire project
-COPY . .
+COPY --from=build /app/target/rakeshperala-0.0.1-SNAPSHOT.jar app.jar
 
 # Build the project
 RUN mvn clean package
