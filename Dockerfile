@@ -1,22 +1,22 @@
-# Use a base image with OpenJDK 17
-FROM eclipse-temurin:17-jre
+FROM maven:3.9.9-eclipse-temurin-17 AS builder
 
-# Install Maven
-RUN apt-get update && \
-    apt-get install -y maven && \
-    apt-get clean;
-
-# Set the working directory
 WORKDIR /app
 
-# Copy the entire project
-COPY  . .
+# Copy project files
+COPY . .
 
-# Build the project
-RUN mvn clean package
+# Build the jar
+RUN mvn clean package -DskipTests
 
-# Expose port 8080
+
+# ---------- Stage 2: Run ----------
+FROM eclipse-temurin:17-jdk-jammy
+
+WORKDIR /app
+
+# Copy jar from builder stage
+COPY --from=builder /app/target/*.jar app.jar
+
 EXPOSE 8081
 
-# Command to run the JAR file
-ENTRYPOINT ["java", "-jar", "target/rakeshperala-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java","-jar","app.jar"]
